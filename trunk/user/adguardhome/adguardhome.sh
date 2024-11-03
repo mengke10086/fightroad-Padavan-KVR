@@ -62,8 +62,8 @@ if [ ! -f "$adg_file" ] || [ ! -s "$adg_file" ] ; then
   cat > "$adg_file" <<-\EEE
 bind_host: 0.0.0.0
 bind_port: 3030
-auth_name: adguardhome
-auth_pass: adguardhome
+auth_name: root
+auth_pass: rootroot
 language: zh-cn
 rlimit_nofile: 0
 dns:
@@ -90,10 +90,7 @@ dns:
   safebrowsing_enabled: false
   resolveraddress: ""
   upstream_dns:
-  - quic://i.passcloud.xyz:784
-  - tls://i.passcloud.xyz:5432
-  - quic://a.passcloud.xyz:784
-  - tls://a.passcloud.xyz:5432
+  - 127.0.0.1:6053
 tls:
   enabled: false
   server_name: ""
@@ -104,15 +101,15 @@ tls:
   private_key: ""
 filters:
 - enabled: true
-  url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+  url: https://gitlab.com/cats-team/adrules/-/raw/main/dns.txt
   name: AdGuard Simplified Domain Names filter
   id: 1
 - enabled: true
-  url: https://adaway.org/hosts.txt
+  url: https://gitlab.com/cats-team/adrules/-/raw/main/hosts.txt
   name: AdAway
   id: 2
 - enabled: true
-  url: https://anti-ad.net/easylist.txt
+  url: https://neodev.team/adblocker
   name: anti-AD
   id: 3
 user_rules: []
@@ -137,7 +134,7 @@ fi
 
 dl_adg() {
 logger -t "AdGuardHome" "下载AdGuardHome"
-curl -k -s -o /tmp/AdGuardHome/AdGuardHome --connect-timeout 10 --retry 3 https://raw.githubusercontent.com/vb1980/Padavan-KVR/main/trunk/user/adguardhome/AdGuardHome
+curl -k -s -o /tmp/AdGuardHome/AdGuardHome --connect-timeout 10 --retry 3 ftp://192.168.1.1/AiDisk_a1/adguard/AdGuardHome
 if [ ! -f "/tmp/AdGuardHome/AdGuardHome" ]; then
 logger -t "AdGuardHome" "AdGuardHome下载失败，请检查是否能正常访问github!程序将退出。"
 nvram set adg_enable=0
