@@ -88,7 +88,7 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=n" >> .config #mini太小，内置不进
         echo "CONFIG_FIRMWARE_INCLUDE_XRAY=n" >> .config #mini太小，内置不进
         echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=n" >> .config #mini太小，内置不进
-        echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=y" >> .config 
+        echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=n" >> .config 
         ##vpn
         #echo  "CONFIG_FIRMWARE_INCLUDE_OPENVPN=n" >> .config
         #echo "CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_SERVER=n" >> .config
