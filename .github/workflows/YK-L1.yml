@@ -108,6 +108,8 @@ jobs:
         #sed -i '/自定义项/d' .config
         #echo "自定义项=y" >> .config
         #########################################################################################
+        # ✅ 修复 make 时间戳错误（再次确保）
+        sudo find . -type f -exec touch -t $(date +%Y%m%d%H%M.%S) {} \;
         sudo ./clear_tree
         sudo ./build_firmware_modify $TNAME 0
         sudo mv -f images/*.trx /opt/images/
