@@ -110,6 +110,8 @@ jobs:
         #########################################################################################
         # ✅ 修复 make 时间戳错误（再次确保）
         sudo find . -type f -exec touch -t $(date +%Y%m%d%H%M.%S) {} \;
+        # ✅ 修复 Linux 内核配置时间戳错误
+        yes "" | make -C linux-3.4.x silentoldconfig || true
         sudo ./clear_tree
         sudo ./build_firmware_modify $TNAME 0
         sudo mv -f images/*.trx /opt/images/
