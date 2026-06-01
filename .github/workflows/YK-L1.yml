@@ -1,3 +1,4 @@
+# 修改 #TNAME: ZTE_E8820S 中的型号
 name: Build-Padavan-YK-L1
 
 on:
@@ -50,6 +51,9 @@ jobs:
 
         cp -f configs/templates/$TNAME.config .config
 
+        ################################################################################################
+        # 因不同型号配置功能不一样，所以先把配置项删除
+        ################################################################################################
         sed -i 's/CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER=y/CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER=n/g' .config
         sed -i 's/CONFIG_FIRMWARE_INCLUDE_MENTOHUST=y/CONFIG_FIRMWARE_INCLUDE_MENTOHUST=n/g' .config
         sed -i 's/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT=y/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT=n/g' .config
@@ -57,13 +61,30 @@ jobs:
         sed -i 's/CONFIG_FIRMWARE_INCLUDE_NJIT_CLIENT=y/CONFIG_FIRMWARE_INCLUDE_NJIT_CLIENT=n/g' .config
         sed -i 's/CONFIG_FIRMWARE_INCLUDE_OPENSSL_EXE=n/CONFIG_FIRMWARE_INCLUDE_OPENSSL_EXE=y/g' .config
 
-        for i in TRANSMISSION TRANSMISSION_WEB_CONTROL ARIA ARIA_WEB_CONTROL \
-                 ZEROTIER FRPC ALIDDNS SHADOWSOCKS V2RAY XRAY TROJAN SSOBFS \
-                 SOFTETHERVPN_SERVER SOFTETHERVPN_CLIENT SOFTETHERVPN_CMD \
-                 NPC WEBUI_HIDE_VPN OPENVPN SMARTDNS ADGUARDHOME; do
-          sed -i "/CONFIG_FIRMWARE_INCLUDE_${i}/d" .config
-        done
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_TRANSMISSION/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_TRANSMISSION_WEB_CONTROL/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_ARIA/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_ARIA_WEB_CONTROL/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_ZEROTIER/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_FRPC/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_ALIDDNS/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_V2RAY/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_XRAY/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_TROJAN/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SSOBFS/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_SERVER/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CLIENT/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CMD/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_NPC/d' .config
+        sed -i '/CONFIG_FIRMWARE_WEBUI_HIDE_VPN/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_OPENVPN/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SMARTDNS/d' .config
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME/d' .config
 
+        ######################################################################
+        # 以下选项是定义你需要的功能（y=集成,n=忽略）
+        ######################################################################
         echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
         echo "CONFIG_FIRMWARE_INCLUDE_FRPC=n" >> .config
         echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=n" >> .config
@@ -77,9 +98,13 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=n" >> .config
         echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=n" >> .config
 
+        #########################################################################################
+        # 防止内核 silentoldconfig 卡住
+        #########################################################################################
+        yes "" | make -C linux-3.4.x silentoldconfig || true
+
         sudo ./clear_tree
         sudo ./build_firmware_modify $TNAME 0 -j1
-
         sudo mv -f images/*.trx /opt/images/
 
     - name: Upload packages
